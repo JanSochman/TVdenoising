@@ -1,4 +1,4 @@
-function nabla = make_derivatives_mine(W, H)
+function nabla = make_derivatives_mine(H, W)
 
 N = W * H;
 
@@ -8,31 +8,31 @@ val = zeros(1, 4 * N);
 cnt = 1;
 for c = 1:W
     for r = 1:H
-        n = r + (c-1) * W;
+        n = r + (c-1) * H;
         
-        % p_ij^x
-        row(cnt) = n;
-        col(cnt) = n;
-        val(cnt) = -1;
-        cnt = cnt + 1;
+        if (r<H)    % vertical derivatives
+            % p_ij^x
+            row(cnt) = N + n;
+            col(cnt) = n;
+            val(cnt) = -1;
+            cnt = cnt + 1;
         
-        % p_ij^y
-        row(cnt) = N + n;
-        col(cnt) = n;
-        val(cnt) = -1;
-        cnt = cnt + 1;
-        
-        % -p_i-1j^x
-        if (r<H)
-            row(cnt) = n;
+            % -p_i-1j^x
+            row(cnt) = N + n;
             col(cnt) = n+1;
             val(cnt) = 1;
             cnt = cnt + 1;
         end
         
-        % -p_ij-1^y
-        if (c<W)
-            row(cnt) = N + n;
+        if (c<W)    % horizontal derivatives
+            % p_ij^y
+            row(cnt) = n;
+            col(cnt) = n;
+            val(cnt) = -1;
+            cnt = cnt + 1;
+            
+            % -p_ij-1^y
+            row(cnt) = n;
             col(cnt) = n + H;
             val(cnt) = 1;
             cnt = cnt + 1;

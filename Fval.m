@@ -4,7 +4,7 @@ function tv = Fval(u, img, alpha, huber)
 [H W] = size(img);
 N = W * H;
 
-nabla = make_derivatives_mine(W, H);
+nabla = make_derivatives_mine(H, W);
 
 if huber
     tv = nabla * u(:);

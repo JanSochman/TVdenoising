@@ -68,7 +68,8 @@ p = zeros(N * 2, 1);
 
 %% precomputed
 nabla = make_derivatives_mine(H, W);
-divop = make_divop(H, W);
+divop = nabla';
+% divop = make_divop(H, W);
 denom = 1 + tau * lambda;
 
 %% initial criterion value
@@ -84,13 +85,11 @@ criterion(1) = Fval(u, img, alpha, huber) + lambda / lambda_denom * Gval(u, img,
 
 %% plot the initial state
 if showfigs
-    fh = figure;
+    fh1 = sfigure;
     
-    subplot(1, 3, 1);
-    imshow(img);
-    subplot(1, 3, 2);
-    imshow(reshape(u, H, W));
-    subplot(1, 3, 3);
+    imshow([img reshape(u, H, W)]);
+    
+    fh2 = sfigure;
     plot(0, criterion(1), 'b-');
     xlabel('step');
     ylabel('J(u)');
@@ -114,7 +113,7 @@ for step = 1:num_steps
     
     % ----- update u^n+1 ------
     divp = divop * p;
-    u_tilde = u - tau * (-divp);
+    u_tilde = u - tau * divp;
 
     if Lone
         dif = u_tilde - img(:);
@@ -155,13 +154,15 @@ for step = 1:num_steps
     
     % plot current result
     if showfigs
-        figure(fh);
-        subplot(1, 3, 2);
-        imshow(reshape(u, H, W));
-        subplot(1, 3, 3);
+        sfigure(fh1);
+        imshow([img reshape(u, H, W)]);
+        drawnow;
+        
+        sfigure(fh2);
         plot(0:step, criterion(1:step+1), 'b-');
         xlabel('step');
         ylabel('J(u)');
+        drawnow;
     end
 end
 
